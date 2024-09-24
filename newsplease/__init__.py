@@ -145,7 +145,9 @@ class NewsPlease:
             html = SimpleCrawler.fetch_url(url, timeout=timeout, user_agent=user_agent)
             results[url] = NewsPlease.from_html(html, url, download_date)
         else:
-            results = SimpleCrawler.fetch_urls(urls, timeout=timeout, user_agent=user_agent)
+            results = SimpleCrawler.fetch_urls(
+                urls, timeout=timeout, user_agent=user_agent
+            )
 
             futures = {}
             with cf.ProcessPoolExecutor() as exec:

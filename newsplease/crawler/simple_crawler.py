@@ -35,7 +35,9 @@ class SimpleCrawler(object):
         :param timeout: in seconds, if None, the urllib default is used
         :return:
         """
-        return SimpleCrawler._fetch_url(url, False, timeout=timeout, user_agent=user_agent)
+        return SimpleCrawler._fetch_url(
+            url, False, timeout=timeout, user_agent=user_agent
+        )
 
     @staticmethod
     def _fetch_url(url, is_threaded, timeout=None, user_agent=USER_AGENT):
@@ -99,7 +101,9 @@ class SimpleCrawler(object):
         :return:
         """
         threads = [
-            threading.Thread(target=SimpleCrawler._fetch_url, args=(url, True, timeout, user_agent))
+            threading.Thread(
+                target=SimpleCrawler._fetch_url, args=(url, True, timeout, user_agent)
+            )
             for url in urls
         ]
         for thread in threads:
