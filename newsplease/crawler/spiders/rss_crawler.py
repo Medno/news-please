@@ -57,7 +57,10 @@ class RssCrawler(NewspleaseSpider, scrapy.Spider):
         :param obj response: The scrapy response
         """
         yield scrapy.Request(
-            UrlExtractor.get_rss_url(response), callback=self.rss_parse
+            UrlExtractor.get_rss_url(
+                response=response, check_certificate=self.check_certificate
+            ),
+            callback=self.rss_parse,
         )
 
     def rss_parse(self, response):
@@ -116,9 +119,17 @@ class RssCrawler(NewspleaseSpider, scrapy.Spider):
         redirect_url = UrlExtractor.follow_redirects(url=url, check_certificate=check_certificate)
 
         # Check if a standard rss feed exists
-        response = UrlExtractor.request_url(url=redirect_url, check_certificate=check_certificate).read()
-        return re.search(re_rss, response.decode("utf-8")) is not None
+        response = UrlExtractor.request_url(
+            url=redirect_url, check_certificate=check_certificate
+        ).read()
+        if re.search(re_rss, response.decode("utf-8")) is not None:
+            return True
 
+        # Check for alternative RSS feeds
+        rss_urls = UrlExtractor.check_rss_urls(
+            domain_url=redirect_url, check_certificate=check_certificate
+        )
+        return len(rss_urls) > 0
     @staticmethod
     def has_urls_to_scan(url: str, check_certificate: bool = True) -> bool:
         """

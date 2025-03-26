@@ -95,32 +95,67 @@ class UrlExtractor(object):
         return response
 
     @staticmethod
-    def check_sitemap_urls(domain_url: str, check_certificate: bool = True) -> list[str]:
+    def check_pattern_urls(
+        domain_url: str, patterns: list[str], check_certificate: bool = True
+    ) -> list[str]:
+        """Check if a set of patterns exists for the requested domain
+
+        :param str domain_url: The URL to work on
+        :param list[str] patterns: Patterns to check
+        :param bool check_certificate:
+        :return list[str] working_sitemap_paths: All available sitemap for the domain_url
+        """
+        working_pattern_paths = []
+        for pattern in patterns:
+            # check common patterns
+            url_to_query = urljoin(domain_url, pattern)
+            try:
+                response = UrlExtractor.request_url(
+                    url=url_to_query, check_certificate=check_certificate
+                )
+                # Keep sitemaps that exist, including those resulting from redirections
+                if response.getcode() in [200, 301, 308]:
+                    logging.debug(f"Found an existing pattern: {response.url}")
+                    working_pattern_paths.append(response.url)
+            except URLError:
+                continue
+
+        return working_pattern_paths
+
+    @staticmethod
+    def check_sitemap_urls(
+        domain_url: str, check_certificate: bool = True
+    ) -> list[str]:
         """Check if a set of sitemaps exists for the requested domain
 
         :param str domain_url: The URL to work on
         :param bool check_certificate:
         :return list[str] working_sitemap_paths: All available sitemap for the domain_url
         """
-        working_sitemap_paths = []
         config = CrawlerConfig.get_instance()
-        sitemap_patterns = config.section("Crawler").get("sitemap_patterns", [])
-        for sitemap_path in sitemap_patterns:
-            # check common patterns
-            url_sitemap = urljoin(domain_url, sitemap_path)
-            try:
-                response = UrlExtractor.request_url(url=url_sitemap, check_certificate=check_certificate)
-                # Keep sitemaps that exist, including those resulting from redirections
-                if response.getcode() in [200, 301, 308]:
-                    logging.debug(f"Found an existing sitemap: {response.url}")
-                    working_sitemap_paths.append(response.url)
-            except URLError:
-                continue
-
-        return working_sitemap_paths
+        patterns = config.section("Crawler").get("sitemap_patterns", [])
+        return UrlExtractor.check_pattern_urls(
+            domain_url=domain_url,
+            patterns=patterns,
+            check_certificate=check_certificate,
+        )
 
     @staticmethod
-    def get_robots_response(url: str, allow_subdomains: bool, check_certificate: bool = True) -> Optional[HTTPResponse]:
+    def check_rss_urls(domain_url: str, check_certificate: bool = True) -> list[str]:
+        """Check if a set of RSS exists for the requested domain
+
+        :param str domain_url: The URL to work on
+        :param bool check_certificate:
+        :return list[str]: All available RSS for the domain_url
+        """
+        config = CrawlerConfig.get_instance()
+        patterns = config.section("Crawler").get("rss_patterns", [])
+        return UrlExtractor.check_pattern_urls(
+            domain_url=domain_url,
+            patterns=patterns,
+            check_certificate=check_certificate,
+        )
+
         """
         Retrieve robots.txt response if it exists
 
@@ -211,16 +246,20 @@ class UrlExtractor(object):
         :return list[str]: robots.txt URL or available sitemaps
         """
         robots_response = UrlExtractor.get_robots_response(
-            url=domain_url, allow_subdomains=allow_subdomains, check_certificate=check_certificate
+            url=domain_url,
+            allow_subdomains=allow_subdomains,
+            check_certificate=check_certificate,
         )
         if robots_response and robots_response.getcode() == 200:
             robots_content = robots_response.read().decode("utf-8")
             sitemap_urls = re_sitemap.findall(robots_content)
             return sitemap_urls
-        return UrlExtractor.check_sitemap_urls(domain_url=domain_url, check_certificate=check_certificate)
+        return UrlExtractor.check_sitemap_urls(
+            domain_url=domain_url, check_certificate=check_certificate
+        )
 
     @staticmethod
-    def get_rss_url(response: Response) -> str:
+    def get_rss_url(response: Response, check_certificate: bool = True) -> str:
         """
         Extracts the rss feed's url from the scrapy response.
 
@@ -229,11 +268,16 @@ class UrlExtractor(object):
         """
         # if this throws an IndexError, then the webpage with the given url
         # does not contain a link of type "application/rss+xml"
-        return response.urljoin(
+        rss_urls = response.urljoin(
             response.xpath('//link[contains(@type, "application/rss+xml")]')
             .xpath("@href")
-            .extract()[0]
+            .extract()
         )
+        if rss_urls:
+            return rss_urls[0]
+        return UrlExtractor.check_rss_urls(
+            domain_url=response.url, check_certificate=check_certificate
+        )[0]
 
     @staticmethod
     def get_start_url(url: str) -> str:
