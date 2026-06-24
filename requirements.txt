@@ -126,9 +126,7 @@ psycopg2-binary==2.9.12
 pycparser==3.0
     # via cffi
 pydispatcher==2.0.7
-    # via
-    #   news-please (pyproject.toml)
-    #   scrapy
+    # via scrapy
 pymysql==1.2.0
     # via news-please (pyproject.toml)
 pyopenssl==26.3.0

@@ -15,19 +15,18 @@ dependencies = [
   "boto3",
   "dotmap>=1.2.17",
   "elasticsearch>=2.4",
-  "faust-cchardet>=2.1.18",                # To remove ?
+  "faust-cchardet>=2.1.18",
   "hjson>=1.5.8",
   "hurry.filesize>=0.9",
   "langdetect>=1.0.7",
   "lxml>=3.3.5",
-  "lxml-html-clean>=0.1.1",                # To remove ?
+  "lxml-html-clean>=0.1.1",
   "newspaper4k>=0.9.3.1",
   "plac>=0.9.6",
   "psycopg2-binary>=2.8.4",
-  "PyDispatcher>=2.0.5",                   # To remove ?
   "PyMySQL>=0.7.9",
   "pywin32>=220; sys_platform == 'win32'",
-  "python-dateutil>=2.4.0",                # To remove ?
+  "python-dateutil>=2.4.0",
   "readability-lxml==0.8.1",               # The 0.8.4.1 version is broken. cf. https://github.com/buriy/python-readability/issues/194
   "redis",
   "scrapy>=1.1.0",
