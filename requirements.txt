@@ -188,6 +188,7 @@ twisted==26.4.0
     # via scrapy
 typing-extensions==4.15.0
     # via
+    #   news-please (pyproject.toml)
     #   anyio
     #   beautifulsoup4
     #   elasticsearch
