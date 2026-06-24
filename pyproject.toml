@@ -36,7 +36,15 @@ dependencies = [
 ]
 authors = [{ name = "Felix Hamborg", email = "felix.hamborg@uni-konstanz.de" }]
 description = "news-please is an open source easy-to-use news extractor that just works."
-keywords = "news crawler news scraper news extractor crawler extractor scraper information retrieval"
+keywords = [
+  "news-crawler",
+  "news-scraper",
+  "news-extractor",
+  "crawler",
+  "extractor",
+  "scraper",
+  "information-retrieval",
+]
 license = "Apache License 2.0"
 license-files = ["LICENCE.TXT"]
 classifiers = [
