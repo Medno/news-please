@@ -45,14 +45,13 @@ keywords = [
   "scraper",
   "information-retrieval",
 ]
-license = "Apache License 2.0"
-license-files = ["LICENCE.TXT"]
+license = "Apache-2.0"
+license-files = ["LICENSE.TXT"]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Environment :: Console",
   "Intended Audience :: Developers",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: Apache Software License",
   "Operating System :: MacOS",
   "Operating System :: Microsoft",
   "Operating System :: POSIX :: Linux",
