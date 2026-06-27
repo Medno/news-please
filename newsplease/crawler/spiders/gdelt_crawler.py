@@ -1,15 +1,11 @@
 from newsplease.crawler.spiders.newsplease_spider import NewspleaseSpider
 
-try:
-    import urllib2
-except ImportError:
-    pass
 import csv
+import io
 import logging
 import os
 import re
 
-import io
 import requests
 import scrapy
 import zipfile

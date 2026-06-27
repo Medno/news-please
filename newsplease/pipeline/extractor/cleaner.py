@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-import sys
 
 from lxml import html
 
@@ -67,10 +66,7 @@ class Cleaner:
                     newlist.append(self.do_cleaning(entry))
                 return newlist
             else:
-                if sys.version_info[0] < 3:
-                    arg = unicode(arg)
-                else:
-                    arg = str(arg)
+                arg = str(arg)
                 arg = self.delete_tags(arg)
                 arg = self.delete_whitespaces(arg)
                 return arg

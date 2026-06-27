@@ -7,20 +7,14 @@ import os
 import re
 import ssl
 from typing import Optional
+
 from scrapy.http import Response
 from http.client import HTTPResponse
+from urllib.parse import urljoin, urlparse
+from urllib.request import build_opener, Request, urlopen, HTTPRedirectHandler
 from urllib.error import URLError
 from newsplease.config import CrawlerConfig
 
-try:
-    from urlparse import urljoin, urlparse
-except ImportError:
-    from urllib.parse import urljoin, urlparse
-
-try:
-    import urllib2
-except ImportError:
-    import urllib.request as urllib2
 
 # len(".markdown") = 9
 MAX_FILE_EXTENSION_LENGTH = 9
@@ -86,13 +80,13 @@ class UrlExtractor(object):
         request = UrlExtractor.url_to_request_with_agent(url)
 
         if check_certificate:
-            opener = urllib2.build_opener(urllib2.HTTPRedirectHandler)
+            opener = build_opener(HTTPRedirectHandler)
             return opener.open(request)
 
         context = ssl.create_default_context()
         context.check_hostname = False
         context.verify_mode = ssl.CERT_NONE
-        response = urllib2.urlopen(request, context=context)
+        response = urlopen(request, context=context)
 
         return response
 
@@ -303,7 +297,7 @@ class UrlExtractor(object):
             return os.path.split(url)[1]
 
     @staticmethod
-    def url_to_request_with_agent(url: str) -> urllib2.Request:
+    def url_to_request_with_agent(url: str) -> Request:
         options = CrawlerConfig.get_instance().get_scrapy_options()
         user_agent = options["USER_AGENT"]
-        return urllib2.Request(url, headers={"user-agent": user_agent})
+        return Request(url, headers={"user-agent": user_agent})

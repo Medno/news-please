@@ -1,17 +1,13 @@
+import logging
+import re
+
 from requests import get
+import scrapy
 from scrapy.http import TextResponse, XmlResponse
 
 from newsplease.crawler.spiders.newsplease_spider import NewspleaseSpider
 from newsplease.helper_classes.url_extractor import UrlExtractor
 
-try:
-    import urllib2
-except ImportError:
-    pass
-import logging
-import re
-
-import scrapy
 
 # to improve performance, regex statements are compiled only once per module
 re_rss = re.compile(
