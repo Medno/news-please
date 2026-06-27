@@ -9,6 +9,7 @@ import logging
 import os
 import sys
 import time
+import urllib.parse
 
 from ago import human
 import boto3
@@ -16,7 +17,6 @@ import botocore
 from dateutil import parser
 from hurry.filesize import size
 from scrapy.utils.log import configure_logging
-from six.moves import urllib
 from warcio.archiveiterator import ArchiveIterator
 
 from .. import NewsPlease, EmptyResponseError
