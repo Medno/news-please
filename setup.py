@@ -58,7 +58,10 @@ news-please is an open source, easy-to-use news crawler that extracts structured
         "lxml-html-clean>=0.1.1",
         "typing-extensions>=4.7.0",
     ],
-    extras_require={':sys_platform == "win32"': ["pywin32>=220"]},
+    extras_require={
+        ':sys_platform == "win32"': ["pywin32>=220"],
+        "dev": ["pre-commit"],
+    },
     entry_points={
         "console_scripts": [
             "news-please = newsplease.__main__:main",
