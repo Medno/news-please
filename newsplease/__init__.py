@@ -2,10 +2,9 @@ import concurrent.futures as cf
 import datetime
 import os
 import sys
-import urllib
+import urllib.parse
 
 from bs4.dammit import EncodingDetector
-from six.moves import urllib
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
