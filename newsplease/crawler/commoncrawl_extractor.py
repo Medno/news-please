@@ -304,7 +304,7 @@ class CommonCrawlExtractor:
                                 human(start_time),
                                 secs_per_article,
                             )
-                except:
+                except Exception:
                     if self.__continue_after_error:
                         self.__logger.error(
                             "Unexpected error: %s (%s)", *sys.exc_info()[0:2]

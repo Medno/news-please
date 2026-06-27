@@ -132,7 +132,7 @@ def __extract_date_from_warc_filename(path):
 
     try:
         return datetime.datetime.strptime(dt, "%Y%m%d%H%M%S")
-    except:
+    except Exception:
         # return date clearly outside the range
         return datetime.datetime(1900, 1, 1)
 
@@ -239,7 +239,7 @@ def __get_url_path(url_or_path):
         try:
             url = urlparse(url_or_path)
             return url.path.lstrip("/")  # trim leading slash
-        except:
+        except Exception:
             pass
     return url_or_path
 

@@ -40,7 +40,7 @@ class NewsPlease:
                 .split(";")[1]
                 .split("=")[1]
             )
-        except:
+        except Exception:
             pass
         if not encoding:
             encoding = EncodingDetector.find_declared_encoding(raw_stream, is_html=True)
