@@ -122,7 +122,9 @@ class NewsPlease:
         :return: A NewsArticle object containing all the information of the article. Else, None.
         :rtype: NewsArticle, None
         """
-        articles = NewsPlease.from_urls([url], request_args=request_args, fetch_images=fetch_images)
+        articles = NewsPlease.from_urls(
+            [url], request_args=request_args, fetch_images=fetch_images
+        )
         if url in articles.keys():
             return articles[url]
         else:
@@ -155,7 +157,11 @@ class NewsPlease:
             with cf.ProcessPoolExecutor() as exec:
                 for url in results:
                     future = exec.submit(
-                        NewsPlease.from_html, results[url], url, download_date, fetch_images
+                        NewsPlease.from_html,
+                        results[url],
+                        url,
+                        download_date,
+                        fetch_images,
                     )
                     futures[future] = url
 
@@ -163,7 +169,7 @@ class NewsPlease:
                 url = futures[future]
                 try:
                     results[url] = future.result(timeout=request_args.get("timeout"))
-                except Exception as err:
+                except Exception:
                     results[url] = {}
 
         return results

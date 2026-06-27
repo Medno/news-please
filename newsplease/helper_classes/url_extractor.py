@@ -72,7 +72,9 @@ class UrlExtractor(object):
         :param bool check_certificate:
         :return str: actual address of url
         """
-        return UrlExtractor.request_url(url=url, check_certificate=check_certificate).url
+        return UrlExtractor.request_url(
+            url=url, check_certificate=check_certificate
+        ).url
 
     @staticmethod
     def request_url(url: str, check_certificate: bool = True) -> HTTPResponse:
@@ -95,7 +97,9 @@ class UrlExtractor(object):
         return response
 
     @staticmethod
-    def check_sitemap_urls(domain_url: str, check_certificate: bool = True) -> list[str]:
+    def check_sitemap_urls(
+        domain_url: str, check_certificate: bool = True
+    ) -> list[str]:
         """Check if a set of sitemaps exists for the requested domain
 
         :param str domain_url: The URL to work on
@@ -109,7 +113,9 @@ class UrlExtractor(object):
             # check common patterns
             url_sitemap = urljoin(domain_url, sitemap_path)
             try:
-                response = UrlExtractor.request_url(url=url_sitemap, check_certificate=check_certificate)
+                response = UrlExtractor.request_url(
+                    url=url_sitemap, check_certificate=check_certificate
+                )
                 # Keep sitemaps that exist, including those resulting from redirections
                 if response.getcode() in [200, 301, 308]:
                     logging.debug(f"Found an existing sitemap: {response.url}")
@@ -120,7 +126,9 @@ class UrlExtractor(object):
         return working_sitemap_paths
 
     @staticmethod
-    def get_robots_response(url: str, allow_subdomains: bool, check_certificate: bool = True) -> Optional[HTTPResponse]:
+    def get_robots_response(
+        url: str, allow_subdomains: bool, check_certificate: bool = True
+    ) -> Optional[HTTPResponse]:
         """
         Retrieve robots.txt response if it exists
 
@@ -161,15 +169,15 @@ class UrlExtractor(object):
             url=parsed_redirection, url_netloc=url_netloc
         )
         try:
-            response = UrlExtractor.request_url(url=robots_url, check_certificate=check_certificate)
+            response = UrlExtractor.request_url(
+                url=robots_url, check_certificate=check_certificate
+            )
             if response.getcode() == 200:
                 return response
         except URLError:
             if allow_subdomains:
                 return UrlExtractor.get_robots_response(
-                    url=url,
-                    allow_subdomains=False,
-                    check_certificate=check_certificate
+                    url=url, allow_subdomains=False, check_certificate=check_certificate
                 )
         return None
 
@@ -194,14 +202,18 @@ class UrlExtractor(object):
         ):
             return True
         # Check if there is an existing sitemap outside of robots.txt
-        sitemap_urls = UrlExtractor.check_sitemap_urls(domain_url=url, check_certificate=check_certificate)
+        sitemap_urls = UrlExtractor.check_sitemap_urls(
+            domain_url=url, check_certificate=check_certificate
+        )
         any_sitemap_found = len(sitemap_urls) > 0
         if not any_sitemap_found:
             logging.warning("Fatal: neither robots.txt nor sitemap found.")
         return any_sitemap_found
 
     @staticmethod
-    def get_sitemap_urls(domain_url: str, allow_subdomains: bool, check_certificate: bool) -> list[str]:
+    def get_sitemap_urls(
+        domain_url: str, allow_subdomains: bool, check_certificate: bool
+    ) -> list[str]:
         """Retrieve SitemapCrawler input URLs from robots.txt or sitemaps
 
         :param str domain_url: The URL to work on
@@ -211,13 +223,17 @@ class UrlExtractor(object):
         :return list[str]: robots.txt URL or available sitemaps
         """
         robots_response = UrlExtractor.get_robots_response(
-            url=domain_url, allow_subdomains=allow_subdomains, check_certificate=check_certificate
+            url=domain_url,
+            allow_subdomains=allow_subdomains,
+            check_certificate=check_certificate,
         )
         if robots_response and robots_response.getcode() == 200:
             robots_content = robots_response.read().decode("utf-8")
             sitemap_urls = re_sitemap.findall(robots_content)
             return sitemap_urls
-        return UrlExtractor.check_sitemap_urls(domain_url=domain_url, check_certificate=check_certificate)
+        return UrlExtractor.check_sitemap_urls(
+            domain_url=domain_url, check_certificate=check_certificate
+        )
 
     @staticmethod
     def get_rss_url(response: Response) -> str:
