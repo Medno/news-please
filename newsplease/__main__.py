@@ -315,7 +315,6 @@ class NewsPleaseLauncher(object):
         if os.path.exists(self.cfg_directory_path):
             return
 
-        user_choice = "n"
         if self.no_confirm:
             user_choice = "y"
         else:
@@ -325,10 +324,7 @@ class NewsPleaseLauncher(object):
                 + "'. "
                 + "Should a default configuration be created at this path? [Y/n] "
             )
-            if sys.version_info[0] < 3:
-                user_choice = raw_input()
-            else:
-                user_choice = input()
+            user_choice = input()
             user_choice = user_choice.lower().replace("yes", "y").replace("no", "n")
 
         if not user_choice or user_choice == "":  # the default is yes
