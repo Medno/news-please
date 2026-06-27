@@ -11,7 +11,7 @@ class ComparerDate:
         list_publish_date = []
 
         for article_candidate in list_article_candidate:
-            if article_candidate.publish_date != None:
+            if article_candidate.publish_date is not None:
                 list_publish_date.append(
                     (article_candidate.publish_date, article_candidate.extractor)
                 )

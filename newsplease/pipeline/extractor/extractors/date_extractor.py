@@ -61,7 +61,7 @@ class DateExtractor(AbstractExtractor):
         try:
             date = parse(date_string)
             return date.strftime("%Y-%m-%d %H:%M:%S")
-        except:
+        except Exception:
             return None
 
     def _extract_from_url(self, url):

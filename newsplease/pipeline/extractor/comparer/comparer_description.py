@@ -16,7 +16,7 @@ class ComparerDescription:
         in a tuple in list_description.
         """
         for article_candidate in list_article_candidate:
-            if article_candidate.description != None:
+            if article_candidate.description is not None:
                 list_description.append(
                     (article_candidate.description, article_candidate.extractor)
                 )

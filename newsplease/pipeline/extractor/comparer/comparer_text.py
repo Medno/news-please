@@ -18,7 +18,7 @@ class ComparerText:
 
         # The texts of the article candidates and the respective extractors are saved in a tuple in list_text.
         for article_candidate in article_candidate_list:
-            if article_candidate.text != None:
+            if article_candidate.text is not None:
                 list_text.append((article_candidate.text, article_candidate.extractor))
 
         # Remove texts that are shorter than min_number_words.
